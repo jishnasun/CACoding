@@ -4,6 +4,7 @@ import entity.User;
 import entity.UserFactory;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
+import use_case.clear_users.ClearUserDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, ClearUserDataAccessInterface {
 
     private final File csvFile;
 
@@ -62,6 +63,21 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
     @Override
     public User get(String username) {
         return accounts.get(username);
+    }
+
+    @Override
+    public String userList() {
+        StringBuilder result = new StringBuilder();
+        for (String i : accounts.keySet()) {
+            result.append(i).append("\n");
+        }
+        return result.toString();
+    }
+
+    @Override
+    public void clearUsers() {
+        accounts.clear();
+        save();
     }
 
     private void save() {
